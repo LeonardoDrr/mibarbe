@@ -33,7 +33,7 @@ async function loadProducts(db) {
     const container = document.getElementById('products-container');
 
     try {
-        const snapshot = await db.collection('productos')
+        const snapshot = await db.collection('products')
             .where('isActive', '==', true)
             .get();
         

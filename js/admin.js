@@ -133,7 +133,7 @@ async function loadAdminProducts() {
     const tbody = document.getElementById('table-productos');
     
     try {
-        const snap = await db.collection('productos').get();
+        const snap = await db.collection('products').get();
         let products = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
         products.sort((a, b) => (a.order || 0) - (b.order || 0));
