@@ -15,16 +15,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const menuToggle = document.getElementById('menu-toggle');
     const navbarNav = document.getElementById('navbar-nav');
     menuToggle.addEventListener('click', () => {
-        navbarNav.classList.toggle('active');
-    });
+    // 2. Cargar Mapa de Google en el Footer
+    if (APP_CONFIG.map) {
+        const mapHtml = `<iframe width="100%" height="100%" frameborder="0" style="border:0" src="https://maps.google.com/maps?q=${APP_CONFIG.map.lat},${APP_CONFIG.map.lng}&z=15&output=embed" allowfullscreen></iframe>`;
+        const mapContainer = document.getElementById('footer-map');
+        if (mapContainer) mapContainer.innerHTML = mapHtml;
+    }
 
-    // 2. Inicializar Firebase
+    // 3. Inicializar Firebase
     if (!firebase.apps.length) {
         firebase.initializeApp(APP_CONFIG.firebase);
     }
     const db = firebase.firestore();
 
-    // 3. Cargar Servicios desde Firestore
+    // 4. Cargar Servicios desde Firestore
     loadServices(db);
 });
 
@@ -55,8 +59,12 @@ async function loadServices(db) {
         }
 
         services.forEach(service => {
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+            
             const card = document.createElement('div');
             card.className = 'card';
+            card.style.height = '100%';
             
             const imageUrl = getCloudinaryUrl(service.imageId);
             const priceStr = `${APP_CONFIG.shop.currency}${service.price}`;
@@ -79,7 +87,25 @@ async function loadServices(db) {
                     </div>
                 </div>
             `;
-            container.appendChild(card);
+            slide.appendChild(card);
+            container.appendChild(slide);
+        });
+
+        // Inicializar Swiper después de inyectar el DOM
+        new Swiper(".mySwiper", {
+            slidesPerView: 1.2,
+            centeredSlides: true,
+            spaceBetween: 20,
+            loop: true,
+            grabCursor: true,
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+            },
+            breakpoints: {
+                640: { slidesPerView: 2.2, spaceBetween: 20 },
+                1024: { slidesPerView: 3.5, spaceBetween: 30 }
+            }
         });
 
     } catch (error) {

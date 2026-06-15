@@ -10,8 +10,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     
-    <!-- FontAwesome para íconos (reemplazo de Lucide-react) -->
+    <!-- FontAwesome para íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SwiperJS CSS para el carrusel -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/styles.css">
@@ -50,16 +53,17 @@
         </div>
     </header>
 
-    <!-- Servicios Section -->
-    <section class="container" style="padding: 4rem 1.5rem;">
-        <div class="text-center" style="margin-bottom: 3rem;">
+    <!-- Servicios Section (Carrusel) -->
+    <section style="padding: 4rem 0; overflow: hidden;">
+        <div class="container text-center" style="margin-bottom: 3rem;">
             <p class="text-gold" style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Lo que ofrecemos</p>
             <h2>Nuestros Servicios</h2>
         </div>
         
-        <div id="services-container" class="grid">
-            <div class="loading-container" style="grid-column: 1 / -1;">
-                <span class="loader"></span>
+        <!-- Contenedor Swiper -->
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper" id="services-container">
+                <div class="loading-container" style="width: 100%;"><span class="loader"></span></div>
             </div>
         </div>
     </section>
@@ -75,6 +79,7 @@
                 <div class="footer-col">
                     <h3>Ubicación</h3>
                     <p class="text-muted"><i class="fa-solid fa-location-dot"></i> <span id="footer-address">Cargando...</span></p>
+                    <div id="footer-map" style="margin-top: 1rem; border-radius: var(--radius-md); overflow: hidden; height: 200px; background: #222;"></div>
                 </div>
                 <div class="footer-col">
                     <h3>Enlaces</h3>
@@ -93,6 +98,9 @@
     <!-- Scripts de Firebase (CDN Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     
     <!-- Configuración y Lógica -->
     <script src="js/config.js"></script>
