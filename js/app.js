@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const menuToggle = document.getElementById('menu-toggle');
     const navbarNav = document.getElementById('navbar-nav');
     menuToggle.addEventListener('click', () => {
+        navbarNav.classList.toggle('active');
+    });
+
     // 2. Cargar Mapa de Google en el Footer
     if (APP_CONFIG.map) {
         const mapHtml = `<iframe width="100%" height="100%" frameborder="0" style="border:0" src="https://maps.google.com/maps?q=${APP_CONFIG.map.lat},${APP_CONFIG.map.lng}&z=15&output=embed" allowfullscreen></iframe>`;
