@@ -14,6 +14,16 @@ let selectedDate = null; // Date object
 let selectedTime = null; // "HH:mm"
 let currentStep = 1;
 
+// Helper para AM/PM
+function formatAMPM(time24) {
+    let [h, m] = time24.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12;
+    h = h ? h : 12; 
+    const minStr = m.toString().padStart(2, '0');
+    return `${h}:${minStr} ${ampm}`;
+}
+
 // Referencias DOM
 const elStep1 = document.getElementById('step-1');
 const elStep2 = document.getElementById('step-2');
@@ -109,7 +119,7 @@ window.goToStep = function(step) {
     if (step === 3) { 
         elStep3.classList.add('active'); elInd3.classList.add('active');
         const dateStr = selectedDate.toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
-        document.getElementById('summary-datetime').textContent = `${dateStr} a las ${selectedTime}`;
+        document.getElementById('summary-datetime').textContent = `${dateStr} a las ${formatAMPM(selectedTime)}`;
     }
 }
 
@@ -236,7 +246,7 @@ function renderTimeSlots(dateStr, schedule) {
     slots.forEach(slot => {
         const btn = document.createElement('button');
         btn.className = 'time-slot';
-        btn.textContent = slot;
+        btn.textContent = formatAMPM(slot);
         
         btn.addEventListener('click', () => {
             document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('selected'));
@@ -331,7 +341,7 @@ document.getElementById('booking-form').addEventListener('submit', async (e) => 
         
         // Redirigir a WhatsApp
         const dateDisplay = selectedDate.toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
-        const msg = `Hola, soy ${clientName}. Acabo de reservar: ${selectedService.name} el ${dateDisplay} a las ${selectedTime}. Quiero confirmar mi cita. ID: ${docRef.id}`;
+        const msg = `Hola, soy ${clientName}. Acabo de reservar: ${selectedService.name} el ${dateDisplay} a las ${formatAMPM(selectedTime)}. Quiero confirmar mi cita. ID: ${docRef.id}`;
         
         const waUrl = `https://wa.me/${APP_CONFIG.shop.whatsappNumber}?text=${encodeURIComponent(msg)}`;
         
