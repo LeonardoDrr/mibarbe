@@ -42,8 +42,7 @@
 
     <section class="container" style="padding: 4rem 1.5rem;">
         <div class="text-center" style="margin-bottom: 3rem;">
-            <p class="text-gold" style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem;">Productos Exclusivos</p>
-            <h2>Cuidado Personal</h2>
+            <h2>Productos</h2>
         </div>
         
         <!-- Buscador de Productos -->
@@ -66,9 +65,9 @@
             const term = q.toLowerCase().trim();
             let visible = 0;
             cards.forEach(card => {
-                const name = (card.querySelector('h3, .card-title, strong')?.textContent || '').toLowerCase();
-                const show = name.includes(term);
-                card.parentElement.style.display = show ? '' : 'none';
+                const name = (card.querySelector('.card-title')?.textContent || '').toLowerCase();
+                const show = !term || name.includes(term);
+                card.style.display = show ? '' : 'none';
                 if (show) visible++;
             });
             const noRes = document.getElementById('store-no-results');
