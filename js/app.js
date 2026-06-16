@@ -69,7 +69,7 @@ async function loadServices(db) {
             card.className = 'card';
             card.style.height = '100%';
             
-            const imageUrl = getCloudinaryUrl(service.imageId);
+            const imageUrl = getCloudinaryUrl(service.imagePublicId);
             const priceStr = `${APP_CONFIG.shop.currency}${service.price}`;
 
             card.innerHTML = `

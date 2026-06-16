@@ -58,7 +58,7 @@ async function loadProducts(db) {
             const card = document.createElement('div');
             card.className = 'card';
             
-            const imageUrl = getCloudinaryUrl(prod.imageId);
+            const imageUrl = getCloudinaryUrl(prod.imagePublicId);
             const priceStr = `${APP_CONFIG.shop.currency}${prod.price}`;
             
             // Botón de WhatsApp para comprar
