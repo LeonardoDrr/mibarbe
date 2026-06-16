@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('nav-shop-name').textContent = APP_CONFIG.shop.name;
     document.getElementById('footer-shop-name').textContent = APP_CONFIG.shop.name;
     document.getElementById('footer-address').textContent = APP_CONFIG.shop.address;
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+    const yearEl = document.getElementById('current-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 
     if (APP_CONFIG.map) {
         const mapHtml = `<iframe width="100%" height="100%" frameborder="0" style="border:0" src="https://maps.google.com/maps?q=${APP_CONFIG.map.lat},${APP_CONFIG.map.lng}&z=15&output=embed" allowfullscreen></iframe>`;

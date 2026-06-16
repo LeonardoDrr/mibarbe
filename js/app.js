@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('nav-shop-name').textContent = APP_CONFIG.shop.name;
     document.getElementById('footer-shop-name').textContent = APP_CONFIG.shop.name;
     document.getElementById('footer-address').textContent = APP_CONFIG.shop.address;
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+    const yearEl = document.getElementById('current-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
 
     // Menu Mobile Toggle
     const menuToggle = document.getElementById('menu-toggle');
