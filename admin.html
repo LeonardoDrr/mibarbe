@@ -120,6 +120,7 @@
             <section id="view-catalogo" class="admin-view">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <h2>Servicios (Catálogo)</h2>
+                    <button class="btn btn-primary" onclick="openModal('service')"><i class="fa-solid fa-plus"></i> Nuevo Servicio</button>
                 </div>
                 
                 <div class="card" style="overflow-x: auto;">
@@ -130,6 +131,7 @@
                                 <th>Precio</th>
                                 <th>Duración</th>
                                 <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="table-catalogo">
@@ -143,6 +145,7 @@
             <section id="view-productos" class="admin-view">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <h2>Productos (Tienda)</h2>
+                    <button class="btn btn-primary" onclick="openModal('product')"><i class="fa-solid fa-plus"></i> Nuevo Producto</button>
                 </div>
                 
                 <div class="card" style="overflow-x: auto;">
@@ -153,6 +156,7 @@
                                 <th>Precio</th>
                                 <th>Stock</th>
                                 <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="table-productos">
@@ -164,11 +168,55 @@
             
         </main>
     </div>
+    <!-- Modal CRUD -->
+    <div id="crud-modal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="modal-title">Nuevo Elemento</h3>
+                <button class="btn-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="crud-form" class="modal-body">
+                <input type="hidden" id="crud-id">
+                <input type="hidden" id="crud-type">
+                
+                <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" id="crud-name" class="form-control" required>
+                </div>
+                
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label class="form-label">Precio ($)</label>
+                        <input type="number" id="crud-price" class="form-control" required>
+                    </div>
+                    <div id="crud-specific-field">
+                        <label class="form-label" id="crud-specific-label">Duración (min)</label>
+                        <input type="number" id="crud-specific-input" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">URL de Imagen (Opcional)</label>
+                    <input type="url" id="crud-image" class="form-control" placeholder="https://...">
+                </div>
+                
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem;">
+                    <input type="checkbox" id="crud-active" checked style="width: 18px; height: 18px;">
+                    <label class="form-label" style="margin-bottom: 0;">Activo (Visible en la web)</label>
+                </div>
+                
+                <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-crud">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
     
-    <script src="js/config.js"></script>
-    <script src="js/admin.js"></script>
+    <script src="js/config.js?v=2"></script>
+    <script src="js/admin.js?v=2"></script>
 </body>
 </html>

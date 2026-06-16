@@ -124,10 +124,22 @@ async function loadCatalog() {
                 <td class="text-gold" style="font-weight:bold">${APP_CONFIG.shop.currency}${s.price}</td>
                 <td>${s.durationMinutes} min</td>
                 <td>${statusText}</td>
+                <td>
+                    <button class="btn-action btn-edit" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-action btn-delete" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                </td>
             `;
+            tr.querySelector('.btn-edit').addEventListener('click', () => openModal('service', s));
+            tr.querySelector('.btn-delete').addEventListener('click', () => deleteItem('services', s.id, s.name));
             tbody.appendChild(tr);
         });
         
+    } catch (error) {
+        console.error("Error cargando catálogo:", error);
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-error">Error cargando catálogo.</td></tr>';
+    }
+}
+
 // ── PRODUCTOS (TIENDA) ──
 async function loadAdminProducts() {
     const tbody = document.getElementById('table-productos');
@@ -156,12 +168,111 @@ async function loadAdminProducts() {
                 <td class="text-gold" style="font-weight:bold">${APP_CONFIG.shop.currency}${p.price}</td>
                 <td>${p.stock}</td>
                 <td>${statusText}</td>
+                <td>
+                    <button class="btn-action btn-edit" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-action btn-delete" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                </td>
             `;
+            tr.querySelector('.btn-edit').addEventListener('click', () => openModal('product', p));
+            tr.querySelector('.btn-delete').addEventListener('click', () => deleteItem('products', p.id, p.name));
             tbody.appendChild(tr);
         });
         
     } catch (error) {
         console.error("Error cargando productos:", error);
         tbody.innerHTML = '<tr><td colspan="4" class="text-center text-error">Error cargando productos.</td></tr>';
+    }
+}
+
+// ── LÓGICA CRUD (MODAL) ──
+function openModal(type, item = null) {
+    const modal = document.getElementById('crud-modal');
+    const form = document.getElementById('crud-form');
+    
+    document.getElementById('crud-type').value = type;
+    document.getElementById('modal-title').textContent = item ? `Editar ${type === 'service' ? 'Servicio' : 'Producto'}` : `Nuevo ${type === 'service' ? 'Servicio' : 'Producto'}`;
+    
+    if (type === 'service') {
+        document.getElementById('crud-specific-label').textContent = 'Duración (min)';
+        document.getElementById('crud-specific-input').placeholder = '90';
+    } else {
+        document.getElementById('crud-specific-label').textContent = 'Stock Disponible';
+        document.getElementById('crud-specific-input').placeholder = '10';
+    }
+    
+    if (item) {
+        document.getElementById('crud-id').value = item.id;
+        document.getElementById('crud-name').value = item.name;
+        document.getElementById('crud-price').value = item.price;
+        document.getElementById('crud-specific-input').value = type === 'service' ? (item.durationMinutes || 90) : (item.stock || 0);
+        document.getElementById('crud-image').value = item.imageUrl || '';
+        document.getElementById('crud-active').checked = item.isActive !== false;
+    } else {
+        document.getElementById('crud-id').value = '';
+        form.reset();
+        document.getElementById('crud-active').checked = true;
+    }
+    
+    modal.classList.add('active');
+}
+
+function closeModal() {
+    document.getElementById('crud-modal').classList.remove('active');
+    document.getElementById('crud-form').reset();
+}
+
+document.getElementById('crud-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btn-save-crud');
+    btn.disabled = true;
+    btn.textContent = 'Guardando...';
+    
+    const id = document.getElementById('crud-id').value;
+    const type = document.getElementById('crud-type').value;
+    const collection = type === 'service' ? 'services' : 'products';
+    
+    const data = {
+        name: document.getElementById('crud-name').value,
+        price: Number(document.getElementById('crud-price').value),
+        isActive: document.getElementById('crud-active').checked,
+        imageUrl: document.getElementById('crud-image').value
+    };
+    
+    const specificVal = Number(document.getElementById('crud-specific-input').value);
+    if (type === 'service') {
+        data.durationMinutes = specificVal;
+    } else {
+        data.stock = specificVal;
+    }
+    
+    try {
+        if (id) {
+            await db.collection(collection).doc(id).update(data);
+        } else {
+            data.order = 100; 
+            await db.collection(collection).add(data);
+        }
+        closeModal();
+        if (type === 'service') loadCatalog();
+        else loadAdminProducts();
+    } catch (err) {
+        console.error("Error guardando:", err);
+        alert("Hubo un error al guardar. Verifica tu conexión.");
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Guardar';
+    }
+});
+
+async function deleteItem(collection, id, name) {
+    if (confirm(`¿Estás completamente seguro de que deseas ELIMINAR: "${name}"?`)) {
+        try {
+            await db.collection(collection).doc(id).delete();
+            if (collection === 'services') loadCatalog();
+            else loadAdminProducts();
+        } catch (err) {
+            console.error("Error eliminando:", err);
+            alert("Hubo un error al eliminar.");
+        }
     }
 }
