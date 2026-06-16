@@ -335,7 +335,19 @@ document.getElementById('booking-form').addEventListener('submit', async (e) => 
         
         const waUrl = `https://wa.me/${APP_CONFIG.shop.whatsappNumber}?text=${encodeURIComponent(msg)}`;
         
-        window.location.href = waUrl;
+        // Abrir en una nueva pestaña para mantener limpia la consola de nuestra app
+        window.open(waUrl, '_blank');
+        
+        // Mostrar éxito en la UI actual
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Cita Registrada!';
+        btn.style.backgroundColor = '#10b981'; // Verde éxito
+        btn.style.color = '#000';
+        btn.style.borderColor = '#10b981';
+        
+        // Regresar al inicio después de 3 segundos
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 3000);
         
     } catch (error) {
         console.error("Error guardando reserva:", error);
