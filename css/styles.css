@@ -257,6 +257,29 @@ img {
     padding: 2rem 0 !important;
 }
 
+.swiper-button-prev,
+.swiper-button-next {
+    color: var(--color-gold) !important;
+    background: rgba(0,0,0,0.6);
+    border-radius: 50%;
+    width: 44px !important;
+    height: 44px !important;
+    display: none; /* Solo visible en PC */
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+    font-size: 1.1rem !important;
+    font-weight: bold;
+}
+
+@media (min-width: 1024px) {
+    .swiper-button-prev,
+    .swiper-button-next {
+        display: flex;
+    }
+}
+
 .swiper-slide {
     transition: all 0.4s ease;
     opacity: 0.5;

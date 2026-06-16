@@ -100,8 +100,12 @@ async function loadServices(db) {
             slidesPerView: 1.2,
             centeredSlides: true,
             spaceBetween: 20,
-            loop: services.length >= 8, // Requiere al menos 8 servicios para no dar warning
+            loop: services.length >= 8,
             grabCursor: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
             autoplay: {
                 delay: 2500,
                 disableOnInteraction: false,

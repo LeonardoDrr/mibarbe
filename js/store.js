@@ -44,9 +44,10 @@ async function loadProducts(db) {
             .where('isActive', '==', true)
             .get();
         
-        const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        let products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
-        products.sort((a, b) => (a.order || 0) - (b.order || 0));
+        // Ordenar alfabéticamente por nombre
+        products.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'es'));
 
         container.innerHTML = ''; 
 

@@ -139,7 +139,19 @@
                         <label class="form-label">Teléfono (WhatsApp) *</label>
                         <input type="tel" id="clientPhone" class="form-control" required placeholder="Ej: +58 414 1234567">
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;" id="btn-submit-booking">
+
+                    <!-- Selección de productos opcionales -->
+                    <div class="form-group" style="margin-top: 1.5rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
+                        <label class="form-label" style="margin-bottom: 0.75rem;">
+                            <i class="fa-solid fa-box-open"></i> ¿Qué productos quieres que usemos? <span class="text-muted" style="font-weight: normal;">(Opcional)</span>
+                        </label>
+                        <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 1rem;">Así preparamos todo antes de tu llegada ⚡</p>
+                        <div id="product-selection-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                            <div class="loading-container" style="grid-column: 1/-1; min-height: 60px;"><span class="loader"></span></div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" id="btn-submit-booking">
                         <i class="fa-brands fa-whatsapp"></i> Confirmar Reserva por WhatsApp
                     </button>
                 </form>
@@ -176,7 +188,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/config.js?v=3"></script>
-    <script src="js/booking.js?v=3"></script>
+    <script src="js/config.js?v=4"></script>
+    <script src="js/booking.js?v=4"></script>
 </body>
 </html>

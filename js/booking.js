@@ -53,11 +53,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     await Promise.all([
         loadServices(),
         loadSchedules(),
-        loadExistingBookings()
+        loadExistingBookings(),
+        loadProductsForBooking()
     ]);
 
     initCalendar();
 });
+
+// ── CARGAR PRODUCTOS PARA SELECCIONAR EN RESERVA ──
+async function loadProductsForBooking() {
+    const container = document.getElementById('product-selection-list');
+    if (!container) return;
+    
+    try {
+        const snap = await db.collection('products').where('isActive', '==', true).get();
+        const products = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        products.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'es'));
+        
+        if (products.length === 0) {
+            container.innerHTML = '<p class="text-muted" style="font-size:0.85rem;">No hay productos disponibles.</p>';
+            return;
+        }
+        
+        container.innerHTML = '';
+        products.forEach(p => {
+            const label = document.createElement('label');
+            label.style.cssText = 'display:flex; align-items:center; gap:0.5rem; padding:0.6rem 0.8rem; border:1px solid var(--color-border); border-radius:var(--radius-sm); cursor:pointer; transition:var(--transition);';
+            label.innerHTML = `
+                <input type="checkbox" name="product" value="${p.name}" style="width:16px; height:16px; accent-color: var(--color-gold);">
+                <span style="font-size:0.88rem;">${p.name}</span>
+            `;
+            label.querySelector('input').addEventListener('change', function() {
+                label.style.borderColor = this.checked ? 'var(--color-gold)' : 'var(--color-border)';
+                label.style.background = this.checked ? 'var(--color-gold-dim)' : 'transparent';
+            });
+            container.appendChild(label);
+        });
+    } catch (e) {
+        console.error('Error cargando productos para reserva:', e);
+        container.innerHTML = '';
+    }
+}
 
 // ── PASO 1: SERVICIOS ──
 async function loadServices() {
@@ -341,7 +377,15 @@ document.getElementById('booking-form').addEventListener('submit', async (e) => 
         
         // Redirigir a WhatsApp
         const dateDisplay = selectedDate.toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
-        const msg = `Hola, soy ${clientName}. Acabo de reservar: ${selectedService.name} el ${dateDisplay} a las ${formatAMPM(selectedTime)}. Quiero confirmar mi cita. ID: ${docRef.id}`;
+        
+        // Obtener productos seleccionados
+        const checkedProducts = [...document.querySelectorAll('#product-selection-list input[type="checkbox"]:checked')]
+            .map(cb => cb.value);
+        const productsLine = checkedProducts.length > 0
+            ? `\n\n📦 Productos para preparar: ${checkedProducts.join(', ')}.`
+            : '';
+        
+        const msg = `Hola, soy ${clientName}. Acabo de reservar: ${selectedService.name} el ${dateDisplay} a las ${formatAMPM(selectedTime)}. Quiero confirmar mi cita.${productsLine}\n\nID de reserva: ${docRef.id}`;
         
         const waUrl = `https://wa.me/${APP_CONFIG.shop.whatsappNumber}?text=${encodeURIComponent(msg)}`;
         
