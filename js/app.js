@@ -100,7 +100,7 @@ async function loadServices(db) {
             slidesPerView: 1.2,
             centeredSlides: true,
             spaceBetween: 20,
-            loop: services.length > 4, // Solo activa el loop infinito si hay más de 4 servicios
+            loop: services.length >= 8, // Requiere al menos 8 servicios para no dar warning
             grabCursor: true,
             autoplay: {
                 delay: 2500,
