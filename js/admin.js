@@ -1,11 +1,69 @@
 // ============================================================
 // LÓGICA DE ADMINISTRACIÓN (admin.js)
-// Ver citas y catálogo desde Firestore
+// ── LOGIN ──
 // ============================================================
+
+const ADMIN_USERS = [
+    { username: 'admin',  password: 'admin2026' },
+    { username: 'admin2', password: 'admin2026' }
+];
 
 let db;
 
-document.addEventListener('DOMContentLoaded', async () => {
+// ── LOGIN ──
+document.getElementById('login-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const user = document.getElementById('login-user').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    const errorEl = document.getElementById('login-error');
+
+    const match = ADMIN_USERS.find(u => u.username === user && u.password === pass);
+    if (match) {
+        sessionStorage.setItem('adminUser', match.username);
+        errorEl.style.display = 'none';
+        showAdminApp(match.username);
+    } else {
+        errorEl.style.display = 'block';
+        document.getElementById('login-pass').value = '';
+    }
+});
+
+function showAdminApp(username) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-app').style.display = 'flex';
+    document.getElementById('sidebar-username').textContent = username;
+    initAdminApp();
+}
+
+function doLogout() {
+    sessionStorage.removeItem('adminUser');
+    document.getElementById('admin-app').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('login-user').value = '';
+    document.getElementById('login-pass').value = '';
+}
+
+// ── BUSCADOR DE TABLAS ──
+function filterTable(tableId, query, colIndex) {
+    const rows = document.querySelectorAll(`#${tableId} tr`);
+    const q = query.toLowerCase().trim();
+    rows.forEach(row => {
+        const cell = row.cells[colIndex];
+        if (!cell) return;
+        row.style.display = cell.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Verificar si ya hay sesión activa
+    const savedUser = sessionStorage.getItem('adminUser');
+    if (savedUser) {
+        showAdminApp(savedUser);
+    }
+    // Si no hay sesión, la pantalla de login se muestra por defecto
+});
+
+async function initAdminApp() {
     document.getElementById('nav-shop-name').textContent = APP_CONFIG.shop.name;
     
     // Navegación por Tabs
@@ -37,7 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadAdminProducts();
     
     document.getElementById('btn-refresh-citas').addEventListener('click', loadBookings);
-});
+} // fin initAdminApp
 
 // ── CITAS ──
 async function loadBookings() {

@@ -55,10 +55,77 @@
             .admin-layout { flex-direction: column; }
             .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--color-border); }
         }
+
+        /* ── Login Screen ── */
+        #login-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: var(--color-bg);
+            display: flex; justify-content: center; align-items: center;
+        }
+        .login-card {
+            width: 100%; max-width: 400px;
+            background: var(--color-bg-alt);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .login-logo {
+            text-align: center; margin-bottom: 2rem;
+        }
+        .login-logo i { font-size: 2.5rem; color: var(--color-gold); }
+        .login-logo h2 { margin-top: 0.5rem; font-size: 1.4rem; }
+        .login-logo p { color: var(--color-text-muted); font-size: 0.9rem; }
+        .login-error {
+            background: rgba(239,68,68,0.15); border: 1px solid #ef4444;
+            color: #ef4444; padding: 0.75rem 1rem; border-radius: var(--radius-sm);
+            font-size: 0.9rem; margin-bottom: 1rem; display: none;
+        }
+
+        /* ── Search Bar ── */
+        .search-bar {
+            position: relative; margin-bottom: 1.5rem;
+        }
+        .search-bar input {
+            width: 100%; padding: 0.75rem 1rem 0.75rem 2.75rem;
+            background: var(--color-bg); border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm); color: var(--color-text);
+            font-size: 0.95rem; transition: var(--transition);
+        }
+        .search-bar input:focus { outline: none; border-color: var(--color-gold); }
+        .search-bar i {
+            position: absolute; left: 1rem; top: 50%;
+            transform: translateY(-50%); color: var(--color-text-muted);
+        }
     </style>
 </head>
 <body>
-    <div class="admin-layout">
+    <!-- PANTALLA DE LOGIN -->
+    <div id="login-screen">
+        <div class="login-card">
+            <div class="login-logo">
+                <i class="fa-solid fa-scissors"></i>
+                <h2>Panel de Administración</h2>
+                <p>Barbería Elite &mdash; Acceso restringido</p>
+            </div>
+            <div class="login-error" id="login-error">Usuario o contraseña incorrectos.</div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label"><i class="fa-solid fa-user"></i> Usuario</label>
+                    <input type="text" id="login-user" class="form-control" placeholder="admin" autocomplete="username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><i class="fa-solid fa-lock"></i> Contraseña</label>
+                    <input type="password" id="login-pass" class="form-control" placeholder="••••••••" autocomplete="current-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Entrar al Panel
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="admin-layout" id="admin-app" style="display:none;">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-brand">
@@ -82,6 +149,12 @@
             </nav>
             
             <div style="padding: 1.5rem; border-top: 1px solid var(--color-border);">
+                <p class="text-muted" style="font-size:0.8rem; margin-bottom:0.75rem;">
+                    <i class="fa-solid fa-circle-user"></i> <span id="sidebar-username">admin</span>
+                </p>
+                <button onclick="doLogout()" class="btn btn-outline" style="width: 100%; font-size: 0.9rem; margin-bottom:0.5rem;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+                </button>
                 <a href="index.html" class="btn btn-outline" style="width: 100%; font-size: 0.9rem;">
                     <i class="fa-solid fa-arrow-left"></i> Volver a Web
                 </a>
@@ -118,9 +191,13 @@
 
             <!-- VISTA: CATÁLOGO DE SERVICIOS -->
             <section id="view-catalogo" class="admin-view">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                     <h2>Servicios (Catálogo)</h2>
                     <button class="btn btn-primary" onclick="openModal('service')"><i class="fa-solid fa-plus"></i> Nuevo Servicio</button>
+                </div>
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-servicios" placeholder="Buscar servicio por nombre..." oninput="filterTable('table-catalogo', this.value, 0)">
                 </div>
                 
                 <div class="card" style="overflow-x: auto;">
@@ -143,9 +220,13 @@
 
             <!-- VISTA: PRODUCTOS (TIENDA) -->
             <section id="view-productos" class="admin-view">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                     <h2>Productos (Tienda)</h2>
                     <button class="btn btn-primary" onclick="openModal('product')"><i class="fa-solid fa-plus"></i> Nuevo Producto</button>
+                </div>
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-productos" placeholder="Buscar producto por nombre..." oninput="filterTable('table-productos', this.value, 0)">
                 </div>
                 
                 <div class="card" style="overflow-x: auto;">
@@ -167,7 +248,7 @@
             </section>
             
         </main>
-    </div>
+    </div><!-- /#admin-app -->
     <!-- Modal CRUD -->
     <div id="crud-modal" class="modal-overlay">
         <div class="modal-container">
@@ -216,7 +297,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
     
-    <script src="js/config.js?v=2"></script>
-    <script src="js/admin.js?v=2"></script>
+    <script src="js/config.js?v=3"></script>
+    <script src="js/admin.js?v=3"></script>
 </body>
 </html>
