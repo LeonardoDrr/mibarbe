@@ -79,7 +79,16 @@
         <div class="card card-body">
             <!-- PASO 1: SELECCIONAR SERVICIO -->
             <div id="step-1" class="step-container active">
-                <h2 style="margin-bottom: 1.5rem;">Selecciona un Servicio</h2>
+                <h2 style="margin-bottom: 1rem;">Selecciona un Servicio</h2>
+
+                <!-- Buscador de servicios -->
+                <div style="position:relative; margin-bottom:1.25rem;">
+                    <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--color-text-muted);"></i>
+                    <input type="text" id="service-search" placeholder="Buscar servicio..." oninput="filterServices(this.value)"
+                        style="width:100%; padding:0.75rem 1rem 0.75rem 2.75rem; background:var(--color-bg-alt); border:1px solid var(--color-border); border-radius:var(--radius-sm); color:var(--color-text); font-size:0.95rem; transition:var(--transition);">
+                </div>
+                <p id="service-no-results" style="display:none; color:var(--color-text-muted); font-size:0.9rem;">No se encontró ningún servicio con ese nombre.</p>
+
                 <div id="service-list" class="grid" style="grid-template-columns: 1fr;">
                     <div class="loading-container"><span class="loader"></span></div>
                 </div>
@@ -188,7 +197,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-    <script src="js/config.js?v=4"></script>
-    <script src="js/booking.js?v=4"></script>
+    <script src="js/config.js?v=5"></script>
+    <script src="js/booking.js?v=5"></script>
 </body>
 </html>

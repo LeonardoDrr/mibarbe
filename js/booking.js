@@ -134,6 +134,21 @@ async function loadServices() {
     }
 }
 
+// Buscador de servicios en tiempo real
+window.filterServices = function(q) {
+    const cards = document.querySelectorAll('#service-list .card');
+    const term = q.toLowerCase().trim();
+    let visible = 0;
+    cards.forEach(card => {
+        const name = (card.querySelector('h3')?.textContent || '').toLowerCase();
+        const show = name.includes(term);
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+    const noRes = document.getElementById('service-no-results');
+    if (noRes) noRes.style.display = (visible === 0 && term) ? 'block' : 'none';
+};
+
 function selectService(svc) {
     selectedService = svc;
     

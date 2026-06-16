@@ -46,11 +46,36 @@
             <h2>Cuidado Personal</h2>
         </div>
         
+        <!-- Buscador de Productos -->
+        <div style="max-width: 480px; margin: 0 auto 2.5rem; position: relative;">
+            <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--color-text-muted);"></i>
+            <input type="text" id="store-search" placeholder="Buscar producto..." oninput="filterProducts(this.value)"
+                style="width:100%; padding:0.85rem 1rem 0.85rem 2.75rem; background:var(--color-bg-alt); border:1px solid var(--color-border); border-radius:var(--radius-sm); color:var(--color-text); font-size:1rem; transition:var(--transition);">
+        </div>
+
         <div id="products-container" class="grid">
             <div class="loading-container" style="grid-column: 1 / -1;">
                 <span class="loader"></span>
             </div>
         </div>
+        <p id="store-no-results" style="display:none; text-align:center; color:var(--color-text-muted); margin-top:2rem;">No se encontraron productos para "<span id="store-search-term"></span>".</p>
+
+        <script>
+        function filterProducts(q) {
+            const cards = document.querySelectorAll('#products-container .card');
+            const term = q.toLowerCase().trim();
+            let visible = 0;
+            cards.forEach(card => {
+                const name = (card.querySelector('h3, .card-title, strong')?.textContent || '').toLowerCase();
+                const show = name.includes(term);
+                card.parentElement.style.display = show ? '' : 'none';
+                if (show) visible++;
+            });
+            const noRes = document.getElementById('store-no-results');
+            document.getElementById('store-search-term').textContent = q;
+            noRes.style.display = (visible === 0 && term) ? 'block' : 'none';
+        }
+        </script>
     </section>
 
     <footer class="footer">
@@ -84,7 +109,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
     
-    <script src="js/config.js?v=2"></script>
-    <script src="js/store.js?v=2"></script>
+    <script src="js/config.js?v=3"></script>
+    <script src="js/store.js?v=3"></script>
 </body>
 </html>
