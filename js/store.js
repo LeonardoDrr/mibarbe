@@ -30,9 +30,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadProducts(db);
 });
 
-function getCloudinaryUrl(publicId, width = 600) {
-    if (!publicId) return 'https://placehold.co/600x400/1f1f1f/c9a84c?text=Producto';
-    return `https://res.cloudinary.com/${APP_CONFIG.cloudinary.cloudName}/image/upload/c_thumb,w_${width},q_auto,f_auto/${publicId}`;
+function getImageUrl(item, width = 600) {
+    if (item.imageUrl && item.imageUrl.startsWith('http')) return item.imageUrl;
+    if (item.imagePublicId) return `https://res.cloudinary.com/${APP_CONFIG.cloudinary.cloudName}/image/upload/c_thumb,w_${width},q_auto,f_auto/${item.imagePublicId}`;
+    return 'https://placehold.co/600x400/1f1f1f/c9a84c?text=Producto';
 }
 
 async function loadProducts(db) {
@@ -58,7 +59,7 @@ async function loadProducts(db) {
             const card = document.createElement('div');
             card.className = 'card';
             
-            const imageUrl = getCloudinaryUrl(prod.imagePublicId);
+            const imageUrl = getImageUrl(prod);
             const priceStr = `${APP_CONFIG.shop.currency}${prod.price}`;
             
             // Botón de WhatsApp para comprar

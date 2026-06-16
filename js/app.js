@@ -36,9 +36,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Generar URL de imagen optimizada de Cloudinary
-function getCloudinaryUrl(publicId, width = 600) {
-    if (!publicId) return 'https://placehold.co/600x400/1f1f1f/c9a84c?text=Servicio';
-    return `https://res.cloudinary.com/${APP_CONFIG.cloudinary.cloudName}/image/upload/c_thumb,w_${width},q_auto,f_auto/${publicId}`;
+function getImageUrl(item, width = 600) {
+    if (item.imageUrl && item.imageUrl.startsWith('http')) return item.imageUrl;
+    if (item.imagePublicId) return `https://res.cloudinary.com/${APP_CONFIG.cloudinary.cloudName}/image/upload/c_thumb,w_${width},q_auto,f_auto/${item.imagePublicId}`;
+    return 'https://placehold.co/600x400/1f1f1f/c9a84c?text=Servicio';
 }
 
 async function loadServices(db) {
@@ -69,7 +70,7 @@ async function loadServices(db) {
             card.className = 'card';
             card.style.height = '100%';
             
-            const imageUrl = getCloudinaryUrl(service.imagePublicId);
+            const imageUrl = getImageUrl(service);
             const priceStr = `${APP_CONFIG.shop.currency}${service.price}`;
 
             card.innerHTML = `
