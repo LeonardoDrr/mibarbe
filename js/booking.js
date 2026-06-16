@@ -191,8 +191,7 @@ function renderCalendar(date) {
         } else {
             // Validar si el barbero trabaja este día
             const dayOfWeek = cellDate.getDay();
-            const dayName = DAYS[dayOfWeek];
-            const schedule = schedules.find(s => s.dayOfWeek === dayName);
+            const schedule = schedules.find(s => parseInt(s.dayOfWeek) === dayOfWeek);
             
             if (!schedule || !schedule.isWorking) {
                 btn.disabled = true;
